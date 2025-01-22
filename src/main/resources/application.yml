@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: gamedata
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/gamedata?createDatabaseIfNotExist=true}
+    username: ${SPRING_DATASOURCE_USER:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:Pa55word}
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    cache: false
+
+logging:
+  level:
+    org.springframework.web: DEBUG

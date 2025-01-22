@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Registered Players</title>
+</head>
+<body>
+<h1>Registered Players</h1>
+<table>
+    <thead>
+    <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Jersey Number</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="player : ${players}">
+        <td th:text="${player.name}"></td>
+        <td th:text="${player.lastname}"></td>
+        <td th:text="${player.jerseynumber}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<div style="margin-bottom: 25px"></div>
+
+<div class="section">
+    <a th:href="@{/archive}">
+        <button>Back to archive</button>
+    </a>
+</div>
+
+</body>
+</html>
