@@ -1,7 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Registered Players</title>
+    <style>
+        .delete-btn {
+            color: red;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .delete-btn:hover {
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 <h1>Registered Players</h1>
@@ -11,6 +21,7 @@
         <th>First Name</th>
         <th>Last Name</th>
         <th>Jersey Number</th>
+        <th>Action</th>
     </tr>
     </thead>
     <tbody>
@@ -18,6 +29,13 @@
         <td th:text="${player.name}"></td>
         <td th:text="${player.lastname}"></td>
         <td th:text="${player.jerseynumber}"></td>
+        <td>
+            <a th:href="@{/deletePlayer/{id}(id=${player.id})}"
+               class="delete-btn"
+               onclick="return confirm('Are you sure you want to delete this player?');">
+                ✖
+            </a>
+        </td>
     </tr>
     </tbody>
 </table>

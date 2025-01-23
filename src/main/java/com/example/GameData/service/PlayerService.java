@@ -2,6 +2,7 @@ package com.example.GameData.service;
 
 import com.example.GameData.model.Player;
 import com.example.GameData.repository.PlayerRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +29,13 @@ public class PlayerService {
     public Player getPlayerById(Integer id) {
         return playerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Player not found with id: " + id));
+    }
+
+    public void deletePlayer(Integer id) {
+        if (playerRepository.existsById(id)) {
+            playerRepository.deleteById(id);
+        } else {
+            throw new EntityNotFoundException("Player not found with id: " + id);
+        }
     }
 }

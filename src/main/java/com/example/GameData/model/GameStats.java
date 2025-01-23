@@ -15,6 +15,8 @@ public class GameStats {
     @JoinColumn(name = "player_id")
     private Player player;
 
+    private String gameId;
+
     private LocalDateTime gameDate;
     private int goals;
     private int assists;
@@ -71,5 +73,13 @@ public class GameStats {
 
     public void setPim(int pim) {
         this.pim = pim;
+    }
+
+    public String getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 }

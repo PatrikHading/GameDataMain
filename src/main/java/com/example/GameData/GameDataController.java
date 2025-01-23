@@ -7,11 +7,9 @@ import com.example.GameData.service.PlayerService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.util.ArrayList;
@@ -222,6 +220,8 @@ public class GameDataController {
                              @RequestParam List<Integer> team2Pims,
                              HttpSession session) {
 
+        String gameId = generateGameId();
+
         // Save Team 1 stats
         for (int i = 0; i < team1PlayerIds.size(); i++) {
             Player player = playerService.getPlayerById(team1PlayerIds.get(i));
@@ -231,6 +231,7 @@ public class GameDataController {
             stats.setGoals(team1Goals.get(i));
             stats.setAssists(team1Assists.get(i));
             stats.setPim(team1Pims.get(i));
+            stats.setGameId(gameId);
 
             gameStatsService.saveGameStats(stats);
         }
@@ -244,6 +245,7 @@ public class GameDataController {
             stats.setGoals(team2Goals.get(i));
             stats.setAssists(team2Assists.get(i));
             stats.setPim(team2Pims.get(i));
+            stats.setGameId(gameId);
 
             gameStatsService.saveGameStats(stats);
         }
@@ -255,6 +257,28 @@ public class GameDataController {
         return "redirect:/";
     }
 
+    private String generateGameId() {
+        return "Game-" +System.currentTimeMillis();
+    }
 
+    @GetMapping("/deletePlayer/{id}")
+    public String deletePlayer(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            Player player = playerService.getPlayerById(id);
+            if (player == null) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Player not found");
+                return "redirect:/registeredPlayers";
+            }
+
+            playerService.deletePlayer(id);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Player deleted");
+            return "redirect:/registeredPlayers";
+        } catch (Exception e) {
+
+            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting player: " + e.getMessage());
+            return "redirect:/registeredPlayers";
+        }
+    }
 
 }
