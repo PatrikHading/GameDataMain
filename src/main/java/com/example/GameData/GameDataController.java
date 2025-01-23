@@ -66,6 +66,15 @@ public class GameDataController {
         return "registeredPlayers";
     }
 
+    @GetMapping("/updatePlayers")
+    public String updatePlayers(Model model) {
+        List<Player> players = playerService.getAllPlayers();
+        model.addAttribute("players", players);
+        return "updatePlayers";
+    }
+
+
+
     @GetMapping("/game")
     public String game(Model model, HttpSession session) {
         List<Player> team1Players = (List<Player>) session.getAttribute("team1Players");
@@ -203,20 +212,38 @@ public class GameDataController {
     }
 
     @PostMapping("/endSession")
-    public String endSession(@RequestParam List<Integer> playerIds,
-                             @RequestParam List<Integer> goals,
-                             @RequestParam List<Integer> assists,
-                             @RequestParam List<Integer> pims,
+    public String endSession(@RequestParam List<Integer> team1PlayerIds,
+                             @RequestParam List<Integer> team1Goals,
+                             @RequestParam List<Integer> team1Assists,
+                             @RequestParam List<Integer> team1Pims,
+                             @RequestParam List<Integer> team2PlayerIds,
+                             @RequestParam List<Integer> team2Goals,
+                             @RequestParam List<Integer> team2Assists,
+                             @RequestParam List<Integer> team2Pims,
                              HttpSession session) {
 
-        for (int i = 0; i < playerIds.size(); i++) {
-            Player player = playerService.getPlayerById(playerIds.get(i));
+        // Save Team 1 stats
+        for (int i = 0; i < team1PlayerIds.size(); i++) {
+            Player player = playerService.getPlayerById(team1PlayerIds.get(i));
 
             GameStats stats = new GameStats();
             stats.setPlayer(player);
-            stats.setGoals(goals.get(i));
-            stats.setAssists(assists.get(i));
-            stats.setPim(pims.get(i));
+            stats.setGoals(team1Goals.get(i));
+            stats.setAssists(team1Assists.get(i));
+            stats.setPim(team1Pims.get(i));
+
+            gameStatsService.saveGameStats(stats);
+        }
+
+        // Save Team 2 stats
+        for (int i = 0; i < team2PlayerIds.size(); i++) {
+            Player player = playerService.getPlayerById(team2PlayerIds.get(i));
+
+            GameStats stats = new GameStats();
+            stats.setPlayer(player);
+            stats.setGoals(team2Goals.get(i));
+            stats.setAssists(team2Assists.get(i));
+            stats.setPim(team2Pims.get(i));
 
             gameStatsService.saveGameStats(stats);
         }
