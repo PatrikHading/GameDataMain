@@ -23,6 +23,17 @@ public class PlayerService {
         System.out.println("Player saved: " + savedPlayer);
     }
 
+    public void updatePlayer(Integer id, Player updatedPlayer) {
+        Player player = playerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Player not found"));
+
+        player.setName(updatedPlayer.getName());
+        player.setLastname(updatedPlayer.getLastname());
+        player.setJerseynumber(updatedPlayer.getJerseynumber());
+
+        playerRepository.save(player);
+    }
+
     public List<Player> getAllPlayers() {
         return playerRepository.findAll();
     }

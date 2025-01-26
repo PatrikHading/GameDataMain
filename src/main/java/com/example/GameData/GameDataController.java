@@ -7,9 +7,11 @@ import com.example.GameData.service.PlayerService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 
 import java.util.ArrayList;
@@ -64,12 +66,39 @@ public class GameDataController {
         return "registeredPlayers";
     }
 
-    @GetMapping("/updatePlayers")
-    public String updatePlayers(Model model) {
-        List<Player> players = playerService.getAllPlayers();
-        model.addAttribute("players", players);
-        return "updatePlayers";
+    @Controller
+    @RequestMapping("/updatePlayers")
+    public class PlayerController {
+
+        @Autowired
+        private PlayerService playerService;
+
+        // This handles the GET request for "/updatePlayers/{id}"
+        @GetMapping("/{id}")
+        public String showUpdateForm(@PathVariable Integer id, Model model) {
+            Player player = playerService.getPlayerById(id);
+            model.addAttribute("player", player);
+            return "updatePlayers";  // This will render the "updatePlayers.html" Thymeleaf template
+        }
+
+        // This handles the POST request for "/updatePlayers/{id}"
+        @PostMapping("/{id}")
+        public String updatePlayer(@PathVariable Integer id, @ModelAttribute Player player, BindingResult bindingResult, Model model) {
+            if (bindingResult.hasErrors()) {
+                return "updatePlayers";  // If there are errors, return to the updatePlayers form
+            }
+
+            playerService.updatePlayer(id, player);  // Update the player using your service
+            return "redirect:/registeredPlayers";  // Redirect to the player list page after successful update
+        }
     }
+
+
+
+
+
+
+
 
 
 
