@@ -14,6 +14,7 @@ import java.util.List;
 public interface GameStatsRepository extends JpaRepository<GameStats, Long> {
     List<GameStats> findByPlayer(Player player);
     List<GameStats> findByGameDateBetween(LocalDateTime startDate, LocalDateTime endDate);
+    List<GameStats> findByGameId(String gameId);
 
     @Query("SELECT g FROM GameStats g WHERE g.player.id = :playerId")
     List<GameStats> findByPlayerId(@Param("playerId") Long playerId);
@@ -26,4 +27,7 @@ public interface GameStatsRepository extends JpaRepository<GameStats, Long> {
 
     @Query("SELECT SUM(g.pim) FROM GameStats g WHERE g.player.id = :playerId")
     Integer getTotalPimByPlayerId(@Param("playerId") Long playerId);
+
+    @Query("SELECT DISTINCT gameId FROM GameStats")
+    List<String> findDistinctGameIds();
 }

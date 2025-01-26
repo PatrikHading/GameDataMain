@@ -107,7 +107,6 @@ public class GameDataController {
                 team1Players = new ArrayList<>();
             }
             if (team1Players.size() < 20) {
-                // Check if player isn't already in the team
                 if (!team1Players.contains(playerToAdd)) {
                     team1Players.add(playerToAdd);
                     session.setAttribute("team1Players", team1Players);
@@ -128,7 +127,6 @@ public class GameDataController {
                 team2Players = new ArrayList<>();
             }
             if (team2Players.size() < 20) {
-                // Check if player isn't already in the team
                 if (!team2Players.contains(playerToAdd)) {
                     team2Players.add(playerToAdd);
                     session.setAttribute("team2Players", team2Players);
@@ -222,7 +220,6 @@ public class GameDataController {
 
         String gameId = generateGameId();
 
-        // Save Team 1 stats
         for (int i = 0; i < team1PlayerIds.size(); i++) {
             Player player = playerService.getPlayerById(team1PlayerIds.get(i));
 
@@ -236,7 +233,6 @@ public class GameDataController {
             gameStatsService.saveGameStats(stats);
         }
 
-        // Save Team 2 stats
         for (int i = 0; i < team2PlayerIds.size(); i++) {
             Player player = playerService.getPlayerById(team2PlayerIds.get(i));
 
@@ -250,7 +246,6 @@ public class GameDataController {
             gameStatsService.saveGameStats(stats);
         }
 
-        // Clear session
         session.removeAttribute("team1Players");
         session.removeAttribute("team2Players");
 
@@ -280,5 +275,24 @@ public class GameDataController {
             return "redirect:/registeredPlayers";
         }
     }
+
+    @GetMapping("/games")
+    public String listGames(Model model) {
+        List<String> gameIds = gameStatsService.findUniqueGameIds();
+        model.addAttribute("games", gameIds);
+        return "games";
+    }
+
+    @GetMapping("/games/{gameId}")
+    public String gameDetails(@PathVariable String gameId, Model model) {
+        List<GameStats> gameStats = gameStatsService.findByGameId(gameId);
+        if (!gameStats.isEmpty()) {
+            model.addAttribute("gameStatsList", gameStats);  // Lägg till alla stats för matchen
+        } else {
+            model.addAttribute("gameStatsList", null);  // Ingen statistik för den matchen
+        }
+        return "games";
+    }
+
 
 }

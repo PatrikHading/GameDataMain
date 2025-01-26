@@ -132,7 +132,6 @@
 
 <form th:action="@{/endSession}" method="post" id="endSessionForm">
     <div class="teams-container">
-        <!-- Team 1 Box -->
         <div class="team-box">
             <div class="team-header">TEAM 1</div>
             <div class="player-grid">
@@ -142,7 +141,6 @@
                     <div class="stat-box">Assist</div>
                     <div class="stat-box">PIM</div>
                 </div>
-                <!-- Team 1 Players -->
                 <div class="player-row" th:each="player : ${team1Players}">
                     <div class="player-name" th:text="${player.name + ' ' + player.lastname + ' ' + player.jerseynumber}"></div>
                     <input type="hidden" th:name="team1PlayerIds" th:value="${player.id}" />
@@ -159,7 +157,6 @@
             </div>
         </div>
 
-        <!-- Team 2 Box -->
         <div class="team-box">
             <div class="team-header">TEAM 2</div>
             <div class="player-grid">
@@ -169,7 +166,6 @@
                     <div class="stat-box">Assist</div>
                     <div class="stat-box">PIM</div>
                 </div>
-                <!-- Team 2 Players -->
                 <div class="player-row" th:each="player : ${team2Players}">
                     <div class="player-name" th:text="${player.name + ' ' + player.lastname + ' ' + player.jerseynumber}"></div>
                     <input type="hidden" th:name="team2PlayerIds" th:value="${player.id}" />
@@ -185,7 +181,7 @@
                 </div>
             </div>
         </div>
-    </div> <!-- Avsluta teams-container här -->
+    </div>
 
     <div class="centered-buttons">
         <button type="submit">End Session</button>

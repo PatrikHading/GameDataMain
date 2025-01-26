@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Games</title>
+</head>
+<body>
+<h1>Played Games</h1>
+
+<div th:each="game : ${games}">
+  <a th:href="@{/games/{gameId}(gameId=${game})}" th:text="${game}"></a>
+</div>
+
+<div th:if="${gameStatsList != null}">
+  <h2>Game Details</h2>
+  <table>
+    <thead>
+    <tr>
+      <th>Player Name</th>
+      <th>Jersey Number</th>
+      <th>Goals</th>
+      <th>Assists</th>
+      <th>PIM</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="stat : ${gameStatsList}">
+      <td th:text="${stat.player.name}"></td>
+      <td th:text="${stat.player.lastname}"></td>
+      <td th:text="${stat.player.jerseynumber}"></td>
+      <td th:text="${stat.goals}"></td>
+      <td th:text="${stat.assists}"></td>
+      <td th:text="${stat.pim}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="section">
+  <a th:href="@{/archive}">
+    <button>Back to archive</button>
+  </a>
+</div>
+</body>
+</html>

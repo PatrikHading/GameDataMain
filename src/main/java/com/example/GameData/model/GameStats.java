@@ -22,7 +22,6 @@ public class GameStats {
     private int assists;
     private int pim;
 
-    // Constructor
     public GameStats() {
         this.gameDate = LocalDateTime.now();
     }

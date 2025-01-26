@@ -38,4 +38,12 @@ public class GameStatsService {
     public Integer getPlayerTotalPim(Long playerId) {
         return gameStatsRepository.getTotalPimByPlayerId(playerId);
     }
+
+    public List<String> findUniqueGameIds() {
+        return gameStatsRepository.findDistinctGameIds();
+    }
+
+    public List<GameStats> findByGameId(String gameId) {
+        return gameStatsRepository.findByGameId(gameId);
+    }
 }
