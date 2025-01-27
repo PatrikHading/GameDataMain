@@ -3,14 +3,18 @@ spring:
     name: gamedata
 
   datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/gamedata?createDatabaseIfNotExist=true}
     username: ${SPRING_DATASOURCE_USER:root}
     password: ${SPRING_DATASOURCE_PASSWORD:Pa55word}
   jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: update
-      dialect: org.hibernate.dialect.MySQL8Dialect
+      ddl-auto: none
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
   thymeleaf:
     prefix: classpath:/templates/
@@ -18,6 +22,9 @@ spring:
     mode: HTML
     encoding: UTF-8
     cache: false
+
+  server:
+    port: 8080
 
 logging:
   level:

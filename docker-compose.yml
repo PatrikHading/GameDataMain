@@ -1,25 +1,30 @@
+version: "3.9"
+
 services:
-  gamedata-platform-spring:
+  app:
     build: .
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-db:3306/GameData?createDatabaseIfNotExist=true"
-      SPRING_DATASOURCE_USER: root
-      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_PROFILES_ACTIVE: mysql
+      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-container:3306/gamedata_db?createDatabaseIfNotExist=true"
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Pa55word
+      SPRING_DATASOURCE_DRIVER-CLASS-NAME: com.mysql.cj.jdbc.Driver
+      SPRING_JPA_DATABASE-PLATFORM: org.hibernate.dialect.MySQL8Dialect
+      SPRING_JPA_HIBERNATE_DDL-AUTO: update
+      SPRING_JPA_SHOW-SQL: true
 
   mysql-db:
     image: mysql:8.0
+    container_name: mysql-container
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: gamedata_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: Pa55word
     volumes:
       - db_data:/var/lib/mysql
 
 volumes:
   db_data:
-
