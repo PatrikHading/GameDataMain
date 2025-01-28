@@ -30,16 +30,19 @@ public class GameDataController {
         this.playerService = playerService;
     }
 
+    //Visar startsidan
     @GetMapping("/")
     public String home() {
         return "index";
     }
 
+    // Visar formuläret för att lägga till spelare
     @GetMapping("/addPlayers")
     public String addPlayers() {
         return "addPlayers";
     }
 
+    // Lägger till en spelare i databasen
     @PostMapping("/addPlayers")
     public String addPlayer(
             @RequestParam("firstname") String firstName,
@@ -54,11 +57,13 @@ public class GameDataController {
 
     }
 
+    // Visar arkivsidan
     @GetMapping("/archive")
     public String archive() {
         return "archive";
     }
 
+    // Hämtar alla registrerade spelare och visar dem på sidan
     @GetMapping("/registeredPlayers")
     public String getAllPlayers(Model model) {
         List<Player> players = playerService.getAllPlayers();
@@ -66,6 +71,7 @@ public class GameDataController {
         return "registeredPlayers";
     }
 
+    //Controller för att uppdatera spelare ska flyttas ut ur GameDataController
     @Controller
     @RequestMapping("/updatePlayers")
     public class PlayerController {
@@ -73,35 +79,27 @@ public class GameDataController {
         @Autowired
         private PlayerService playerService;
 
-        // This handles the GET request for "/updatePlayers/{id}"
+        // Visar formuläret för att uppdatera en spelares data
         @GetMapping("/{id}")
         public String showUpdateForm(@PathVariable Integer id, Model model) {
             Player player = playerService.getPlayerById(id);
             model.addAttribute("player", player);
-            return "updatePlayers";  // This will render the "updatePlayers.html" Thymeleaf template
+            return "updatePlayers";
         }
 
-        // This handles the POST request for "/updatePlayers/{id}"
+        // Uppdaterar en spelares data
         @PostMapping("/{id}")
         public String updatePlayer(@PathVariable Integer id, @ModelAttribute Player player, BindingResult bindingResult, Model model) {
             if (bindingResult.hasErrors()) {
-                return "updatePlayers";  // If there are errors, return to the updatePlayers form
+                return "updatePlayers";
             }
 
-            playerService.updatePlayer(id, player);  // Update the player using your service
-            return "redirect:/registeredPlayers";  // Redirect to the player list page after successful update
+            playerService.updatePlayer(id, player);
+            return "redirect:/registeredPlayers";
         }
     }
 
-
-
-
-
-
-
-
-
-
+    // Visar spelarsidan där användare kan lägga till spelare i lag
     @GetMapping("/game")
     public String game(Model model, HttpSession session) {
         List<Player> team1Players = (List<Player>) session.getAttribute("team1Players");
@@ -125,6 +123,7 @@ public class GameDataController {
         return "game";
     }
 
+    // Lägger till spelare i lag 1
     @PostMapping("/addToTeam1")
     public String addToTeam1(@RequestParam("playerId") Integer playerId, HttpSession session, Model model) {
 
@@ -145,6 +144,7 @@ public class GameDataController {
          return "redirect:/game";
     }
 
+    // Lägger till spelare i lag 2
     @PostMapping("/addToTeam2")
     public String addToTeam2(@RequestParam("playerId") Integer playerId, HttpSession session, Model model) {
 
@@ -165,6 +165,7 @@ public class GameDataController {
         return "redirect:/game";
     }
 
+    // Tar bort alla spelare från lag 1
     @PostMapping("/removeAllFromTeam1")
     public String removeAllFromTeam1(HttpSession session, Model model) {
         List<Player> team1Players = (List<Player>) session.getAttribute("team1Players");
@@ -175,6 +176,7 @@ public class GameDataController {
         return "redirect:/game";
     }
 
+    // Tar bort alla spelare från lag 2
     @PostMapping("/removeAllFromTeam2")
     public String removeAllFromTeam2(HttpSession session, Model model) {
         List<Player> team2Players = (List<Player>) session.getAttribute("team2Players");
@@ -185,6 +187,7 @@ public class GameDataController {
         return "redirect:/game";
     }
 
+    // Sparar spelets statistik
     @PostMapping("/saveGameStats")
     public String saveGameStats(
             @RequestParam("playerId") Long playerId,
@@ -197,9 +200,9 @@ public class GameDataController {
     }
 
     @Autowired
-    private GameStatsService gameStatsService;  // Add this field
+    private GameStatsService gameStatsService;
 
-
+    // Uppdaterar spelarnas statistik för mål, assist eller PIM i sessionen
     @PostMapping("/updateStats")
     @ResponseBody
     public String updateStats(
@@ -236,6 +239,7 @@ public class GameDataController {
         return "Success";
     }
 
+    // Avslutar spelet, sparar statistik och rensar laguppställningar från sessionen
     @PostMapping("/endSession")
     public String endSession(@RequestParam List<Integer> team1PlayerIds,
                              @RequestParam List<Integer> team1Goals,
@@ -281,6 +285,7 @@ public class GameDataController {
         return "redirect:/";
     }
 
+    // Genererar ett unikt Game ID baserat på tidsstämpel
     private String generateGameId() {
         return "Game-" +System.currentTimeMillis();
     }
@@ -305,6 +310,7 @@ public class GameDataController {
         }
     }
 
+    // Visar en lista över alla spelade matcher
     @GetMapping("/games")
     public String listGames(Model model) {
         List<String> gameIds = gameStatsService.findUniqueGameIds();
@@ -312,6 +318,7 @@ public class GameDataController {
         return "games";
     }
 
+    // Visar detaljerad statistik för ett specifikt spel baserat på Game ID
     @GetMapping("/games/{gameId}")
     public String gameDetails(@PathVariable String gameId, Model model) {
         List<GameStats> gameStats = gameStatsService.findByGameId(gameId);

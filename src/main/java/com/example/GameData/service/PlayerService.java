@@ -11,6 +11,7 @@ import java.util.*;
 @Service
 public class PlayerService {
 
+    //Injecerar PlayerRepository
     private final PlayerRepository playerRepository;
 
     @Autowired
@@ -18,11 +19,13 @@ public class PlayerService {
         this.playerRepository = playerRepository;
     }
 
+    // Metod för att spara en ny spelare i databasen
     public void savePlayer(Player player) {
         Player savedPlayer = playerRepository.save(player);
         System.out.println("Player saved: " + savedPlayer);
     }
 
+    // Metod för att uppdatera en existerande spelare med nya uppgifter
     public void updatePlayer(Integer id, Player updatedPlayer) {
         Player player = playerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Player not found"));
@@ -34,14 +37,18 @@ public class PlayerService {
         playerRepository.save(player);
     }
 
+    // Metod för att hämta alla spelare från databasen
     public List<Player> getAllPlayers() {
         return playerRepository.findAll();
     }
+
+    // Metod för att hämta en specifik spelare baserat på id
     public Player getPlayerById(Integer id) {
         return playerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Player not found with id: " + id));
     }
 
+    // Metod för att ta bort en spelare från databasen
     public void deletePlayer(Integer id) {
         if (playerRepository.existsById(id)) {
             playerRepository.deleteById(id);

@@ -10,6 +10,8 @@ import java.util.*;
 
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, Integer> {
+
+    //Hämtar alla spelare i databasen
     List<Player> findAll();
 
 }
