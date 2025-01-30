@@ -12,7 +12,7 @@ public class GameStats {
     private Long id;
 
     //ManyToOne för att samma spelare ska kunna finnas i databasen under flera matcher
-    //Fält för att lagra matchen ID, datum med mera.
+    //Fält för att lagra matchen, ID, datum med mera.
     @ManyToOne
     @JoinColumn(name = "player_id")
     private Player player;
