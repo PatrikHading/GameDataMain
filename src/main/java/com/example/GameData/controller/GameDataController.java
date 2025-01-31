@@ -224,7 +224,7 @@ public class GameDataController {
         session.removeAttribute("team1Players");
         session.removeAttribute("team2Players");
 
-        return "redirect:/";
+        return "redirect:/game";
     }
 
     // Genererar ett unikt Game ID baserat på tidsstämpel
