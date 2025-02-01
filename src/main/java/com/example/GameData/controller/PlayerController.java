@@ -19,21 +19,52 @@ public class PlayerController {
     @Autowired
     private PlayerService playerService;
 
-    // Lägg till spelare
     @GetMapping("/addPlayers")
     public String addPlayers() {
         return "addPlayers";
     }
 
     @PostMapping("/addPlayers")
-    public String addPlayer(@RequestParam("firstname") String firstName,
+    public String addPlayer(@RequestParam("name") String firstName,
                             @RequestParam("lastname") String lastName,
-                            @RequestParam("jerseynumber") int jerseyNumber,
+                            @RequestParam("jerseynumber") Integer jerseyNumber,
                             Model model) {
-        Player player = new Player(firstName, lastName, jerseyNumber);
-        playerService.savePlayer(player);
-        model.addAttribute("message", "Player added successfully");
-        return "redirect:/addPlayers";
+
+        if (firstName == null || firstName.trim().isEmpty()) {
+            model.addAttribute("errorMessage", "First name is required");
+            return returnWithFields(model, firstName, lastName, jerseyNumber);
+        }
+
+        if (lastName == null || lastName.trim().isEmpty()) {
+            model.addAttribute("errorMessage", "Last name is required");
+            return returnWithFields(model, firstName, lastName, jerseyNumber);
+        }
+
+        if (jerseyNumber == null) {
+            model.addAttribute("errorMessage", "Jersey number is required");
+            return returnWithFields(model, firstName, lastName, jerseyNumber);
+        }
+
+        if (jerseyNumber <= 0 || jerseyNumber > 100) {
+            model.addAttribute("errorMessage", "Jersey number must be between 1 and 100");
+            return returnWithFields(model, firstName, lastName, jerseyNumber);
+        }
+
+        try {
+            Player player = new Player(firstName.trim(), lastName.trim(), jerseyNumber);
+            playerService.savePlayer(player);
+            return "redirect:/addPlayers?success=true";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Failed to save player. Please try again.");
+            return returnWithFields(model, firstName, lastName, jerseyNumber);
+        }
+    }
+
+    private String returnWithFields(Model model, String firstName, String lastName, Integer jerseyNumber) {
+        model.addAttribute("firstname", firstName);
+        model.addAttribute("lastname", lastName);
+        model.addAttribute("jerseynumber", jerseyNumber);
+        return "addPlayers";
     }
 
     // Visa registrerade spelare

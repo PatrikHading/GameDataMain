@@ -1,31 +1,36 @@
 package com.example.GameData.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Player {
 
-    //Id och GeneratedValue för att automatisk generera ID på spelare som sparas i databasen.
-    //Fält för att lagra spelare namn efternamn tröjnummer
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @NotBlank(message = "Name is required")
     private String name;
+
+    @NotBlank(message = "Lastname is required")
     private String lastname;
+
+    @Min(value = 1, message = "Jersey number must be at least 1")
+    @Max(value = 100, message = "Jersey number cannot be greater than 100")
     private int jerseynumber;
 
-    //Standardkonstruktor
     public Player() {
     }
 
-    //Konstruktor för att skapa spelare med namn, efternamn och tröjnummer
     public Player(String name, String lastname, int jerseynumber) {
         this.name = name;
         this.lastname = lastname;
         this.jerseynumber = jerseynumber;
     }
 
-    //Getters och setters
     public Integer getId() {
         return id;
     }
